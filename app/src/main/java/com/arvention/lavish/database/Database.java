@@ -366,27 +366,27 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public ArrayList<Toilet> getToiletWithBidet() {
-
+        return null;
     }
 
     public ArrayList<Toilet> getToiletWithFlush() {
-
+        return null;
     }
 
     public ArrayList<Toilet> getToiletWithSoap() {
-
+        return null;
     }
 
     public ArrayList<Toilet> getToiletWithFree() {
-
+        return null;
     }
 
     public ArrayList<Toilet> getToiletWithPWD() {
-
+        return null;
     }
 
     public ArrayList<Toilet> getToiletWithCubicleCount() {
-
+        return null;
     }
 
 }
