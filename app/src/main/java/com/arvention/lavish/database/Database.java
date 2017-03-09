@@ -44,6 +44,7 @@ public class Database extends SQLiteOpenHelper {
 
         String CREATE_PLACE_TABLE = "CREATE TABLE " + place_table
                 + "(placeID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + "name TEXT NOT NULL, "
                 + "xCoordinate REAL NOT NULL, "
                 + "yCoordinate REAL NOT NULL, "
                 + "openingHours TEXT NOT NULL)";
@@ -79,6 +80,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues val = new ContentValues();
+        val.put("name", place.getName());
         val.put("xCoordinate", place.getxCoordinate());
         val.put("yCoordinate", place.getyCoordinate());
         val.put("openingHours", place.getOpeningHours());
@@ -121,5 +123,7 @@ public class Database extends SQLiteOpenHelper {
         db.close();
 
     }
+
+
 
 }
