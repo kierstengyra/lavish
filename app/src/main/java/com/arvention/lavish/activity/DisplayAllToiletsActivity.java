@@ -1,6 +1,5 @@
-package com.arvention.lavish.activity;
+package com.lavishinterface;
 
-import com.arvention.lavish.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +17,8 @@ public class DisplayAllToiletsActivity extends AppCompatActivity {
 
     String feature;
     Intent intent;
+
+    Intent nextIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,5 +59,25 @@ public class DisplayAllToiletsActivity extends AppCompatActivity {
 
     public void backToList(View view) {
         finish();
+    }
+
+    public void viewInfo(View view) {
+        nextIntent = new Intent(this, InfoActivity.class);
+        int id = view.getId();
+
+        if(id == R.id.relLayout1)
+            nextIntent.putExtra("TOILET", "DLSU Science and Technology Complex");
+        else if(id == R.id.relLayout2)
+            nextIntent.putExtra("TOILET", "Jollibee");
+        else if(id == R.id.relLayout3)
+            nextIntent.putExtra("TOILET", "Solenad 3");
+        else if(id == R.id.relLayout4)
+            nextIntent.putExtra("TOILET", "McDonald's");
+        else if(id == R.id.relLayout5)
+            nextIntent.putExtra("TOILET", "KFC");
+        else if(id == R.id.relLayout6)
+            nextIntent.putExtra("TOILET", "7-11/Caltex");
+
+        startActivity(nextIntent);
     }
 }
