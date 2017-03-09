@@ -257,4 +257,112 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+    public Place getPlaceByID(int argPlaceID) {
+
+        Place place = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(place_table,                   // table name
+                null,                                           // columns
+                "placeID = ?",                                  // selection
+                new String[]{Integer.toString(argPlaceID)},    // selection args
+                null,                                           // groupBy
+                null,                                           // having
+                null);                                          // orderBy
+
+        if(cursor.moveToFirst()) {
+
+            int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
+            double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
+            String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
+
+            place = new Place(placeID, name, xCoordinate, yCoordinate, openingHours);
+
+        }
+
+        return place;
+
+    }
+
+    public Toilet getToiletByID(int argToiletID) {
+
+        Toilet toilet = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(toilet_table,                  // table name
+                null,                                           // columns
+                "toiletID = ?",                                 // selection
+                new String[]{Integer.toString(argToiletID)},    // selection args
+                null,                                           // groupBy
+                null,                                           // having
+                null);
+
+        if(cursor.moveToFirst()) {
+
+            int toiletID = cursor.getInt(cursor.getColumnIndex("toiletID"));
+            int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
+            double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
+            double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
+
+            boolean hasBidet = false;
+            if(cursor.getInt(cursor.getColumnIndex("hasBidet")) == TRUE)
+                hasBidet = true;
+
+            boolean hasFlush = false;
+            if(cursor.getInt(cursor.getColumnIndex("hasFlush")) == TRUE)
+                hasFlush = true;
+
+            boolean hasSoap = false;
+            if(cursor.getInt(cursor.getColumnIndex("hasSoap")) == TRUE)
+                hasSoap = true;
+
+            boolean isFree = false;
+            if(cursor.getInt(cursor.getColumnIndex("isFree")) == TRUE)
+                isFree = true;
+
+            boolean isPWDFriendly = false;
+            if(cursor.getInt(cursor.getColumnIndex("isPWDFriendly")) == TRUE)
+                isPWDFriendly = true;
+
+            int cubicleCount = cursor.getInt(cursor.getColumnIndex("cubicleCount"));
+
+            toilet = new Toilet(toiletID, placeID, xCoordinate, yCoordinate, hasBidet,
+                    hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount);
+
+        }
+
+        return toilet;
+
+    }
+
+    public Feedback getFeedbackByID(int argFeedbackID) {
+
+        Feedback feedback = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(feedback_table,                // table name
+                null,                                           // columns
+                "feedbackID = ?",                               // selection
+                new String[]{Integer.toString(argFeedbackID)},  // selection args
+                null,                                           // groupBy
+                null,                                           // having
+                null);
+
+        if(cursor.moveToFirst()) {
+
+            int feedbackID = cursor.getInt(cursor.getColumnIndex("feedbackID"));
+            int toiletID = cursor.getInt(cursor.getColumnIndex("toiletID"));
+            float rating = cursor.getFloat(cursor.getColumnIndex("rating"));
+            String content = cursor.getString(cursor.getColumnIndex("content"));
+
+            feedback = new Feedback(feedbackID, toiletID, rating, content);
+
+        }
+
+        return feedback;
+
+    }
+
 }
