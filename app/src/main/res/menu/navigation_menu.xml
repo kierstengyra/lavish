@@ -24,14 +24,14 @@
             android:title="@string/free" />
 
         <item
-            android:id="@+id/nav_paid"
-            android:checked="false"
-            android:title="@string/paid" />
-
-        <item
             android:id="@+id/pwd_friendly"
             android:checked="false"
             android:title="@string/pwd_friendly" />
+
+        <item
+            android:id="@+id/cubicle_count"
+            android:checked="false"
+            android:title="@string/cubicle_count" />
 
     </group>
 </menu>

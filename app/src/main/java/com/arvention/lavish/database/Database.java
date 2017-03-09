@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.arvention.lavish.model.Feedback;
-import com.arvention.lavish.model.Place;
 import com.arvention.lavish.model.Toilet;
 
 import java.lang.reflect.Array;
@@ -27,7 +26,6 @@ public class Database extends SQLiteOpenHelper {
     private final int FALSE = 0;
 
     // Tables
-    private static final String place_table = "place";
     private static final String toilet_table = "toilet";
     private static final String feedback_table = "feedback";
 
@@ -49,16 +47,9 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_PLACE_TABLE = "CREATE TABLE " + place_table
-                + "(placeID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-                + "name TEXT NOT NULL, "
-                + "xCoordinate REAL NOT NULL, "
-                + "yCoordinate REAL NOT NULL, "
-                + "openingHours TEXT NOT NULL)";
-        db.execSQL(CREATE_PLACE_TABLE);
-
         String CREATE_TOILET_TABLE = "CREATE TABLE " + toilet_table
                 + "(toiletID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + "name TEXT NOT NULL, "
                 + "placeID INTEGER NOT NULL, "
                 + "xCoordinate REAL NOT NULL, "
                 + "yCoordinate REAL NOT NULL, "
@@ -67,7 +58,8 @@ public class Database extends SQLiteOpenHelper {
                 + "hasSoap INTEGER NOT NULL, "
                 + "isFree INTEGER NOT NULL, "
                 + "isPWDFriendly INTEGER NOT NULL, "
-                + "cubicleCount INTEGER NOT NULL)";
+                + "cubicleCount INTEGER NOT NULL, "
+                + "openingHours TEXT NOT NULL)";
         db.execSQL(CREATE_TOILET_TABLE);
 
         String CREATE_FEEDBACK_TABLE = "CREATE TABLE " + feedback_table
@@ -82,27 +74,12 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
-    public void addPlace(Place place) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues val = new ContentValues();
-        val.put("name", place.getName());
-        val.put("xCoordinate", place.getxCoordinate());
-        val.put("yCoordinate", place.getyCoordinate());
-        val.put("openingHours", place.getOpeningHours());
-
-        db.insert(place_table, null, val);
-        db.close();
-
-    }
-
     public void addToilet(Toilet toilet) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues val = new ContentValues();
-        val.put("placeID", toilet.getPlaceID());
+        val.put("name", toilet.getName());
         val.put("xCoordinate", toilet.getxCoordinate());
         val.put("yCoordinate", toilet.getyCoordinate());
         val.put("hasBidet", toilet.isHasBidet());
@@ -111,8 +88,9 @@ public class Database extends SQLiteOpenHelper {
         val.put("isFree", toilet.isFree());
         val.put("isPWDFriendly", toilet.isPWDFriendly());
         val.put("cubicleCount", toilet.getCubicleCount());
+        val.put("openingHours", toilet.getOpeningHours());
 
-        db.insert(place_table, null, val);
+        db.insert(toilet_table, null, val);
         db.close();
 
     }
@@ -126,43 +104,8 @@ public class Database extends SQLiteOpenHelper {
         val.put("rating", feedback.getRating());
         val.put("content", feedback.getContent());
 
-        db.insert(place_table, null, val);
+        db.insert(feedback_table, null, val);
         db.close();
-
-    }
-
-    public ArrayList<Place> getAllPlaces() {
-
-        ArrayList<Place> places = new ArrayList<Place>();
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(place_table,       // table name
-                null,                               // columns
-                null,                               // selection
-                null,                               // selection args
-                null,                               // groupBy
-                null,                               // having
-                null);                              // orderBy
-
-        if(cursor.moveToFirst()) {
-
-            while(!cursor.isAfterLast()) {
-
-                int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
-                String name = cursor.getString(cursor.getColumnIndex("name"));
-                double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
-                double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
-                String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
-
-                places.add(new Place(placeID, name, xCoordinate, yCoordinate, openingHours));
-
-                cursor.moveToNext();
-
-            }
-
-        }
-
-        return places;
 
     }
 
@@ -184,6 +127,7 @@ public class Database extends SQLiteOpenHelper {
             while(!cursor.isAfterLast()) {
 
                 int toiletID = cursor.getInt(cursor.getColumnIndex("toiletID"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
                 int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
                 double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
                 double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
@@ -209,9 +153,9 @@ public class Database extends SQLiteOpenHelper {
                     isPWDFriendly = true;
 
                 int cubicleCount = cursor.getInt(cursor.getColumnIndex("cubicleCount"));
-
-                toilets.add(new Toilet(toiletID, placeID, xCoordinate, yCoordinate, hasBidet,
-                        hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount));
+                String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
+                toilets.add(new Toilet(toiletID, name, xCoordinate, yCoordinate, hasBidet,
+                        hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount, openingHours));
 
                 cursor.moveToNext();
 
@@ -257,35 +201,6 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public Place getPlaceByID(int argPlaceID) {
-
-        Place place = null;
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(place_table,                   // table name
-                null,                                           // columns
-                "placeID = ?",                                  // selection
-                new String[]{Integer.toString(argPlaceID)},    // selection args
-                null,                                           // groupBy
-                null,                                           // having
-                null);                                          // orderBy
-
-        if(cursor.moveToFirst()) {
-
-            int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
-            String name = cursor.getString(cursor.getColumnIndex("name"));
-            double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
-            double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
-            String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
-
-            place = new Place(placeID, name, xCoordinate, yCoordinate, openingHours);
-
-        }
-
-        return place;
-
-    }
-
     public Toilet getToiletByID(int argToiletID) {
 
         Toilet toilet = null;
@@ -302,7 +217,7 @@ public class Database extends SQLiteOpenHelper {
         if(cursor.moveToFirst()) {
 
             int toiletID = cursor.getInt(cursor.getColumnIndex("toiletID"));
-            int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
             double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
             double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
 
@@ -327,9 +242,10 @@ public class Database extends SQLiteOpenHelper {
                 isPWDFriendly = true;
 
             int cubicleCount = cursor.getInt(cursor.getColumnIndex("cubicleCount"));
+            String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
 
-            toilet = new Toilet(toiletID, placeID, xCoordinate, yCoordinate, hasBidet,
-                    hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount);
+            toilet = new Toilet(toiletID, name, xCoordinate, yCoordinate, hasBidet,
+                    hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount, openingHours);
 
         }
 

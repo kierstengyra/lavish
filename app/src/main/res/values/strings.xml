@@ -9,7 +9,7 @@
     <string name="with_flush">Toilets with flush</string>
     <string name="with_soap">Toilets with soap</string>
     <string name="free">Free toilets</string>
-    <string name="paid">Paid toilets</string>
     <string name="pwd_friendly">PWD-friendly toilets</string>
+    <string name="cubicle_count">Cubicle Count</string>
 
 </resources>
