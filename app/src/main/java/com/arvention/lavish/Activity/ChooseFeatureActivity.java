@@ -4,7 +4,6 @@ import com.arvention.lavish.database;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import com.arvention.lavish.R;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -19,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     TextView txtBrowse;
     ListView listToilets;
 
+    private Database database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, features);
 
         listToilets = (ListView) findViewById(R.id.listToilets);
-        listToilets.setEnabled(false);
         listToilets.setAdapter(adapter);
+
+        database = new Database();
     }
 }
