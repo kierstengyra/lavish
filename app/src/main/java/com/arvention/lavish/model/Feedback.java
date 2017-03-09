@@ -8,12 +8,12 @@ public class Feedback {
 
     private final int feedbackID;
     private final int toiletID;
-    private final int rating;
+    private final float rating;
     private final String content;
 
     public Feedback(int feedbackID,
                     int toiletID,
-                    int rating,
+                    float rating,
                     String content) {
 
         this.feedbackID = feedbackID;
@@ -31,7 +31,7 @@ public class Feedback {
         return toiletID;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 

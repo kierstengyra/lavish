@@ -2,12 +2,16 @@ package com.arvention.lavish.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.arvention.lavish.model.Feedback;
 import com.arvention.lavish.model.Place;
 import com.arvention.lavish.model.Toilet;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by amcan on 3/9/2017.
@@ -18,6 +22,9 @@ public class Database extends SQLiteOpenHelper {
     private static Database database;
     private static final String db_name = "database.db";
     private static final int db_version = 1;
+
+    private final int TRUE = 1;
+    private final int FALSE = 0;
 
     // Tables
     private static final String place_table = "place";
@@ -124,6 +131,238 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<Place> getAllPlaces() {
 
+        ArrayList<Place> places = new ArrayList<Place>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(place_table,       // table name
+                null,                               // columns
+                null,                               // selection
+                null,                               // selection args
+                null,                               // groupBy
+                null,                               // having
+                null);                              // orderBy
+
+        if(cursor.moveToFirst()) {
+
+            while(!cursor.isAfterLast()) {
+
+                int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
+                double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
+                String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
+
+                places.add(new Place(placeID, name, xCoordinate, yCoordinate, openingHours));
+
+                cursor.moveToNext();
+
+            }
+
+        }
+
+        return places;
+
+    }
+
+    public ArrayList<Toilet> getAllToilets() {
+
+        ArrayList<Toilet> toilets = new ArrayList<Toilet>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(toilet_table,      // table name
+                null,                               // columns
+                null,                               // selection
+                null,                               // selection args
+                null,                               // groupBy
+                null,                               // having
+                null);                              // orderBy
+
+        if(cursor.moveToFirst()) {
+
+            while(!cursor.isAfterLast()) {
+
+                int toiletID = cursor.getInt(cursor.getColumnIndex("toiletID"));
+                int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
+                double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
+                double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
+
+                boolean hasBidet = false;
+                if(cursor.getInt(cursor.getColumnIndex("hasBidet")) == TRUE)
+                    hasBidet = true;
+
+                boolean hasFlush = false;
+                if(cursor.getInt(cursor.getColumnIndex("hasFlush")) == TRUE)
+                    hasFlush = true;
+
+                boolean hasSoap = false;
+                if(cursor.getInt(cursor.getColumnIndex("hasSoap")) == TRUE)
+                    hasSoap = true;
+
+                boolean isFree = false;
+                if(cursor.getInt(cursor.getColumnIndex("isFree")) == TRUE)
+                    isFree = true;
+
+                boolean isPWDFriendly = false;
+                if(cursor.getInt(cursor.getColumnIndex("isPWDFriendly")) == TRUE)
+                    isPWDFriendly = true;
+
+                int cubicleCount = cursor.getInt(cursor.getColumnIndex("cubicleCount"));
+
+                toilets.add(new Toilet(toiletID, placeID, xCoordinate, yCoordinate, hasBidet,
+                        hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount));
+
+                cursor.moveToNext();
+
+            }
+
+        }
+
+        return toilets;
+
+    }
+
+    public ArrayList<Feedback> getAllFeedbacks() {
+
+        ArrayList<Feedback> feedbacks = new ArrayList<Feedback>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(feedback_table,      // table name
+                null,                               // columns
+                null,                               // selection
+                null,                               // selection args
+                null,                               // groupBy
+                null,                               // having
+                null);                              // orderBy
+
+        if(cursor.moveToFirst()) {
+
+            while(!cursor.isAfterLast()) {
+
+                int feedbackID = cursor.getInt(cursor.getColumnIndex("feedbackID"));
+                int toiletID = cursor.getInt(cursor.getColumnIndex("toiletID"));
+                float rating = cursor.getFloat(cursor.getColumnIndex("rating"));
+                String content = cursor.getString(cursor.getColumnIndex("content"));
+
+                feedbacks.add(new Feedback(feedbackID, toiletID, rating, content));
+
+                cursor.moveToNext();
+
+            }
+
+        }
+
+        return feedbacks;
+
+    }
+
+    public Place getPlaceByID(int argPlaceID) {
+
+        Place place = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(place_table,                   // table name
+                null,                                           // columns
+                "placeID = ?",                                  // selection
+                new String[]{Integer.toString(argPlaceID)},    // selection args
+                null,                                           // groupBy
+                null,                                           // having
+                null);                                          // orderBy
+
+        if(cursor.moveToFirst()) {
+
+            int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
+            double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
+            String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
+
+            place = new Place(placeID, name, xCoordinate, yCoordinate, openingHours);
+
+        }
+
+        return place;
+
+    }
+
+    public Toilet getToiletByID(int argToiletID) {
+
+        Toilet toilet = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(toilet_table,                  // table name
+                null,                                           // columns
+                "toiletID = ?",                                 // selection
+                new String[]{Integer.toString(argToiletID)},    // selection args
+                null,                                           // groupBy
+                null,                                           // having
+                null);
+
+        if(cursor.moveToFirst()) {
+
+            int toiletID = cursor.getInt(cursor.getColumnIndex("toiletID"));
+            int placeID = cursor.getInt(cursor.getColumnIndex("placeID"));
+            double xCoordinate = cursor.getDouble(cursor.getColumnIndex("xCoordinate"));
+            double yCoordinate = cursor.getDouble(cursor.getColumnIndex("yCoordinate"));
+
+            boolean hasBidet = false;
+            if(cursor.getInt(cursor.getColumnIndex("hasBidet")) == TRUE)
+                hasBidet = true;
+
+            boolean hasFlush = false;
+            if(cursor.getInt(cursor.getColumnIndex("hasFlush")) == TRUE)
+                hasFlush = true;
+
+            boolean hasSoap = false;
+            if(cursor.getInt(cursor.getColumnIndex("hasSoap")) == TRUE)
+                hasSoap = true;
+
+            boolean isFree = false;
+            if(cursor.getInt(cursor.getColumnIndex("isFree")) == TRUE)
+                isFree = true;
+
+            boolean isPWDFriendly = false;
+            if(cursor.getInt(cursor.getColumnIndex("isPWDFriendly")) == TRUE)
+                isPWDFriendly = true;
+
+            int cubicleCount = cursor.getInt(cursor.getColumnIndex("cubicleCount"));
+
+            toilet = new Toilet(toiletID, placeID, xCoordinate, yCoordinate, hasBidet,
+                    hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount);
+
+        }
+
+        return toilet;
+
+    }
+
+    public Feedback getFeedbackByID(int argFeedbackID) {
+
+        Feedback feedback = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(feedback_table,                // table name
+                null,                                           // columns
+                "feedbackID = ?",                               // selection
+                new String[]{Integer.toString(argFeedbackID)},  // selection args
+                null,                                           // groupBy
+                null,                                           // having
+                null);
+
+        if(cursor.moveToFirst()) {
+
+            int feedbackID = cursor.getInt(cursor.getColumnIndex("feedbackID"));
+            int toiletID = cursor.getInt(cursor.getColumnIndex("toiletID"));
+            float rating = cursor.getFloat(cursor.getColumnIndex("rating"));
+            String content = cursor.getString(cursor.getColumnIndex("content"));
+
+            feedback = new Feedback(feedbackID, toiletID, rating, content);
+
+        }
+
+        return feedback;
+
+    }
 
 }
