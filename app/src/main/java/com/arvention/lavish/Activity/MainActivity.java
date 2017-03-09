@@ -1,4 +1,4 @@
-package com.arvention.lavish.Activity;
+package com.arvention.lavish.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
