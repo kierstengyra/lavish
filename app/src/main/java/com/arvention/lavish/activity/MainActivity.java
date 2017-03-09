@@ -1,6 +1,7 @@
 package com.arvention.lavish.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -8,11 +9,14 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.arvention.lavish.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -48,12 +52,18 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    private final String[] features = {"With Bidet", "With Flush", "With Soap", "Free", "PWD Friendly", "Cubicle Count"};
+    private final String[] menu = {"Toilets with bidet", "Toilets with flush", "Toilets with soap", "Free toilets", "PWD-friendly toilets", "Cubicle Count"};
+
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
     private Polyline directions;
     private LatLng mCurrentLatLng;
     private Marker currMarker;
+
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +82,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                int index = 0;
+                for(int i = 0; i < menu.length; i++) {
+
+                    if(menu[i].equals(item.getTitle()))
+                        index = i;
+
+                }
+
+                Intent intent = new Intent(getApplicationContext(), DisplayAllToiletsActivity.class);
+                intent.putExtra("FEATURE", features[index]);
+                startActivity(intent);
+
+                return true;
+            }
+        });
 
     }
 

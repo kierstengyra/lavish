@@ -7,7 +7,7 @@ package com.arvention.lavish.model;
 public class Toilet {
 
     private final int toiletID;
-    private final int placeID;
+    private final String name;
     private final double xCoordinate;
     private final double yCoordinate;
     private final boolean hasBidet;
@@ -16,9 +16,10 @@ public class Toilet {
     private final boolean isFree;
     private final boolean isPWDFriendly;
     private final int cubicleCount;
+    private final String openingHours;
 
     public Toilet(int toiletID,
-                  int placeID,
+                  String name,
                   double xCoordinate,
                   double yCoordinate,
                   boolean hasBidet,
@@ -26,10 +27,11 @@ public class Toilet {
                   boolean hasSoap,
                   boolean isFree,
                   boolean isPWDFriendly,
-                  int cubicleCount) {
+                  int cubicleCount,
+                  String openingHours) {
 
         this.toiletID = toiletID;
-        this.placeID = placeID;
+        this.name = name;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.hasBidet = hasBidet;
@@ -38,6 +40,7 @@ public class Toilet {
         this.isFree = isFree;
         this.isPWDFriendly = isPWDFriendly;
         this.cubicleCount = cubicleCount;
+        this.openingHours = openingHours;
 
     }
 
@@ -45,9 +48,7 @@ public class Toilet {
         return toiletID;
     }
 
-    public int getPlaceID() {
-        return placeID;
-    }
+    public String getName() { return name; }
 
     public double getxCoordinate() {
         return xCoordinate;
@@ -80,5 +81,7 @@ public class Toilet {
     public int getCubicleCount() {
         return cubicleCount;
     }
+
+    public String getOpeningHours() { return openingHours; }
 
 }
