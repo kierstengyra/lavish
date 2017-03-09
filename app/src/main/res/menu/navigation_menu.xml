@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_bidet"
+            android:checked="false"
+            android:title="@string/with_bidet" />
+
+        <item
+            android:id="@+id/nav_flush"
+            android:checked="false"
+            android:title="@string/with_flush" />
+
+        <item
+            android:id="@+id/nav_soap"
+            android:checked="false"
+            android:title="@string/with_soap" />
+
+        <item
+            android:id="@+id/nav_free"
+            android:checked="false"
+            android:title="@string/free" />
+
+        <item
+            android:id="@+id/nav_paid"
+            android:checked="false"
+            android:title="@string/paid" />
+
+        <item
+            android:id="@+id/pwd_friendly"
+            android:checked="false"
+            android:title="@string/pwd_friendly" />
+
+    </group>
+</menu>

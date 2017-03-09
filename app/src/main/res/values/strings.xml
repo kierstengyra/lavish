@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Lavish</string>
     <string name="dir_http">https://maps.googleapis.com/maps/api/directions/json?</string>
+
+    <string name="sample_name">Dipper Pines</string>
+    <string name="sample_email">dipper@mysteryshack.gf</string>
+
+    <string name="with_bidet">Toilets with bidet</string>
+    <string name="with_flush">Toilets with flush</string>
+    <string name="with_soap">Toilets with soap</string>
+    <string name="free">Free toilets</string>
+    <string name="paid">Paid toilets</string>
+    <string name="pwd_friendly">PWD-friendly toilets</string>
+
 </resources>
