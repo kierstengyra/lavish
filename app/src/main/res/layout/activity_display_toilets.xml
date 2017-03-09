@@ -39,6 +39,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RelativeLayout
+                android:onClick="viewInfo"
+                android:id="@+id/relLayout1"
                 android:clickable="true"
                 android:background="#dedede"
                 android:layout_width="match_parent"
@@ -75,6 +77,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RelativeLayout
+                android:onClick="viewInfo"
+                android:id="@+id/relLayout2"
                 android:clickable="true"
                 android:background="#dedede"
                 android:layout_width="match_parent"
@@ -111,6 +115,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RelativeLayout
+                android:onClick="viewInfo"
+                android:id="@+id/relLayout3"
                 android:clickable="true"
                 android:background="#dedede"
                 android:layout_width="match_parent"
@@ -147,6 +153,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RelativeLayout
+                android:onClick="viewInfo"
+                android:id="@+id/relLayout4"
                 android:clickable="true"
                 android:background="#dedede"
                 android:layout_width="match_parent"
@@ -183,6 +191,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RelativeLayout
+                android:onClick="viewInfo"
+                android:id="@+id/relLayout5"
                 android:clickable="true"
                 android:background="#dedede"
                 android:layout_width="match_parent"
@@ -219,6 +229,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RelativeLayout
+                android:onClick="viewInfo"
+                android:id="@+id/relLayout6"
                 android:clickable="true"
                 android:background="#dedede"
                 android:layout_width="match_parent"
