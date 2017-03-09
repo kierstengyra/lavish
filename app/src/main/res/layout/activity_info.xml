@@ -9,7 +9,7 @@
         android:id="@+id/txtTitle"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:background="#7AAA92"
+        android:background="@color/colorPrimary"
         android:padding="16dp"
         android:textColor="#FFFFFF"
         android:gravity="center_vertical|center_horizontal" />
@@ -19,7 +19,7 @@
         android:layout_height="23dp"
         android:id="@+id/imageButton"
         android:src="@drawable/back_button"
-        android:background="#7AAA92"
+        android:background="@color/colorPrimary"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
