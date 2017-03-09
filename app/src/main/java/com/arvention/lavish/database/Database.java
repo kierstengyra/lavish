@@ -365,4 +365,28 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<Toilet> getToiletWithBidet() {
+
+    }
+
+    public ArrayList<Toilet> getToiletWithFlush() {
+
+    }
+
+    public ArrayList<Toilet> getToiletWithSoap() {
+
+    }
+
+    public ArrayList<Toilet> getToiletWithFree() {
+
+    }
+
+    public ArrayList<Toilet> getToiletWithPWD() {
+
+    }
+
+    public ArrayList<Toilet> getToiletWithCubicleCount() {
+
+    }
+
 }
