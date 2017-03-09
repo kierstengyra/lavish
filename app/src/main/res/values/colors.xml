@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#AAAAAA</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="colorPolyline">#4caf50</color>
+
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBackgroundColor">#D3D3D3</color>

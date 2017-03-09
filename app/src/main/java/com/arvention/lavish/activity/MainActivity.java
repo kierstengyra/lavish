@@ -6,13 +6,17 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.arvention.lavish.R;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
+import com.google.maps.android.SphericalUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,12 +44,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
     private Polyline directions;
+    private LatLng mCurrentLatLng;
+    private Marker currMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .addApi(LocationServices.API)
                     .build();
         }
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -89,8 +98,52 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         addMapMarker(coord1);
         addMapMarker(coord2);
         addMapMarker(coord3);
+    }
 
-        mMap.moveCamera(CameraUpdateFactory.zoomBy(15));
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        drawDirections(marker);
+        currMarker = marker;
+        Log.d("MainActivity", "Marker Clicked");
+        return false;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLatLng,15));
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.e("MainActivity", "GoogleApiClient Connection suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e("MainActivity", "GoogleApiClient Connection failed");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        double myLat = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLatitude();
+        double myLong = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLongitude();
+        mCurrentLatLng = new LatLng(myLat,myLong);
+        /*  currently disabled due to standard license daily limits
+        if(currMarker!=null)
+            drawDirections(currMarker);
+        */
     }
 
     protected void onStart() {
@@ -103,20 +156,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onStop();
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        drawDirections(marker);
-        Log.d("MainActivity","Marker Clicked");
-        return false;
-    }
-
     private void addMapMarker(LatLng coordinates) {
-        mMap.addMarker(new MarkerOptions().position(coordinates));
-        //TODO: add more details for marker (add an identifier)
+        Marker marker = mMap.addMarker(new MarkerOptions().position(coordinates));
+        //marker.setTag();
+        //TODO: add more details for marker (add an identifier) use .tag
     }
 
     private void addMapMarker(LatLng coordinates, String title) {
-        mMap.addMarker(new MarkerOptions().position(coordinates));
+        Marker marker = mMap.addMarker(new MarkerOptions().position(coordinates).title(title));
+        //marker.setTag();
         //TODO: add more details for marker (add an identifier)
     }
 
@@ -140,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         double oriLat =  LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLatitude();
         double oriLong =  LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLongitude();
-        LatLng orig = new LatLng(oriLat,oriLong);
         String params = "origin="+oriLat+","+oriLong
                 +"&destination="+dest.latitude+","+dest.longitude
                 +"&key="+getString(R.string.google_maps_key);
@@ -206,8 +253,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 List<LatLng> latLngs = PolyUtil.decode(pointsHash);
 
-                directions = mMap.addPolyline(new PolylineOptions().addAll(latLngs));
+                //total distance of the route
+                double distance = MapDetailUtil.computeRouteDistance(latLngs);
 
+
+                directions = mMap.addPolyline(new PolylineOptions().addAll(latLngs));
+                directions.setColor(getColor(R.color.colorPolyline));
+
+                Log.d("JSONParser", "Route distance: " + distance+" meters");
                 Log.d("JSONParser", "Result: " + parsedObject.toString());
                 Log.d("JSONParser", "pointsHash: " + pointsHash);
                 Log.d("JSONParser", "Processing finished");
