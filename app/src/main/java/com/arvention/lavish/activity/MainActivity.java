@@ -17,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.arvention.lavish.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private Button buttonRate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
 
                 return true;
+            }
+        });
+
+        buttonRate = (Button) findViewById(R.id.main_rate_button);
+        buttonRate.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), RateActivity.class);
+                startActivity(intent);
+
             }
         });
 
