@@ -296,7 +296,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(nearest!=null) {
                 updateDetailPanel(nearest);
                 LatLng nearestLoc = new LatLng(nearest.getyCoordinate(), nearest.getxCoordinate());
-                directions.remove();
+                if(directions!=null)
+                    directions.remove();
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(nearestLoc, 15));
             }
             Log.d("MainActivity","KEYWORD RECOGNIZED");

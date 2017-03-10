@@ -3,8 +3,11 @@ package com.arvention.lavish.sphinxrecognizer;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.arvention.lavish.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -215,7 +218,7 @@ public class SphinxRecognizer implements RecognitionListener {
         if(recognizer.getSearchName().equals(SphinxRecognizer.MAGICWORD_SEARCH)) {
             text = text.trim();
             String textTokens[] = text.split(" ");
-            if(textTokens[0].matches("semi|half"))
+            if(textTokens[0].matches("lavish"))
                 text = textTokens[0].concat(" "+textTokens[1]);
             else
                 text = textTokens[0];
