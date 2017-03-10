@@ -3,7 +3,6 @@ package com.arvention.lavish.activity;
 import com.arvention.lavish.database.Database;
 
 import com.arvention.lavish.R;
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
