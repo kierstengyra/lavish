@@ -35,7 +35,7 @@ package="com.arvention.lavish">
     <activity android:name=".activity.InfoActivity"></activity>
     <activity android:name=".activity.ChooseFeatureActivity"></activity>
     <activity android:name=".activity.RateActivity"></activity>
-    <activity android:name=".AddFeedbackActivity"></activity>
+    <activity android:name=".activity.AddFeedbackActivity"></activity>
 </application>
 
 </manifest>

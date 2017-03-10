@@ -1,4 +1,4 @@
-package com.lavishinterface;
+package com.arvention.lavish.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.arvention.lavish.R;
 
 public class AddFeedbackActivity extends AppCompatActivity {
 
