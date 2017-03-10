@@ -27,6 +27,7 @@
             android:id="@+id/activity_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorWhite"
             tools:context="com.arvention.lavish.activity.MainActivity">
 
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -35,14 +36,193 @@
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
-            <View
+                android:layout_height="400dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                android:layout_margin="10dp"
+                android:id="@+id/view"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/toilet"
+                        android:layout_gravity="center"
+                        />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/toilet_name"
+                            android:text="Sample Toilet"
+                            android:textSize="20sp"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/toilet_rate1"
+                                android:src="@drawable/ic_star_yellow_24dp"
+                                />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/toilet_rate2"
+                                android:src="@drawable/ic_star_yellow_24dp"
+                                />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/toilet_rate3"
+                                android:src="@drawable/ic_star_yellow_24dp"
+                                />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/toilet_rate4"
+                                android:src="@drawable/ic_star_yellow_24dp"
+                                />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/toilet_rate5"
+                                android:src="@drawable/ic_star_half_yellow_24dp"
+                                />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width ="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toilet_distance"
+                    android:text="100m away"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width ="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_bidet_text"
+                        android:text="Bidet"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_bidet_check"
+                        android:src="@drawable/ic_check_yellow_24dp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width ="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_flus_text"
+                        android:text="Flush"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_flush_check"
+                        android:src="@drawable/ic_check_yellow_24dp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width ="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_soap_text"
+                        android:text="Soap"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_soap_check"
+                        android:src="@drawable/ic_check_yellow_24dp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width ="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_free_text"
+                        android:text="Free"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_free_check"
+                        android:src="@drawable/ic_check_yellow_24dp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width ="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_pwd_text"
+                        android:text="PWD Friendly"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/toilet_pwd_check"
+                        android:src="@drawable/ic_check_yellow_24dp"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+            <!--View
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:background="@color/colorWhite"
-                android:id="@+id/view" />
-        </LinearLayout>
-
+                android:id="@+id/view" /-->
     </FrameLayout>
 
     <android.support.design.widget.NavigationView
