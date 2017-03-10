@@ -6,4 +6,6 @@ package com.arvention.lavish.sphinxrecognizer;
 
 public interface SphinxInterpreter {
     public void resultReceived(String result);
+
+    public void onRecognizerReady();
 }

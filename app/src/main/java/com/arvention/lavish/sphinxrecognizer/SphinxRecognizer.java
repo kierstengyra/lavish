@@ -29,10 +29,7 @@ public class SphinxRecognizer implements RecognitionListener {
     public static final String TAG = "SphinxRecognizer";
 
     /* Named searches allow to quickly reconfigure the decoder */
-    public static final String BINANSWER_SEARCH = "binary";
-    public static final String PHONE_SEARCH = "phones";
-    public static final String MENU_SEARCH = "menu";
-    public static final String SHAPE_SEARCH = "shape";
+    public static final String MAGICWORD_SEARCH = "poop";
 
     /* Singleton attribute */
     private static SphinxRecognizer instance;
@@ -148,22 +145,18 @@ public class SphinxRecognizer implements RecognitionListener {
 
 
         // Create grammar-based search for selection between demos
-        File menuGrammar = new File(assetsDir, "menu.gram");
-        recognizer.addGrammarSearch(MENU_SEARCH, menuGrammar);
+        File keyword = new File(assetsDir, "magicword-kws.txt");
+        recognizer.addKeywordSearch(MAGICWORD_SEARCH,keyword);
 
-        // Create keyword search for binary answers (e.g. yes, no)
-        File binAnswer = new File(assetsDir, "answer_kws.txt");
-        recognizer.addKeywordSearch(BINANSWER_SEARCH, binAnswer);
-
-        // Phonetic search
-        File phoneticModel = new File(assetsDir, "en-phone.dmp");
-        recognizer.addAllphoneSearch(PHONE_SEARCH, phoneticModel);
-
-        //TODO: Shape search
-        File shapekws = new File(assetsDir,"shapes_kws.txt");
-        recognizer.addKeywordSearch(SHAPE_SEARCH,shapekws);
+        Log.d(TAG,"successful setup");
+        notifyInterpretersOnReady();
     }
 
+    public void notifyInterpretersOnReady(){
+        for(int i=0; i<interpreters.size(); i++){
+            interpreters.get(i).onRecognizerReady();
+        }
+    }
 
     public void startSearch(String searchName) {
         recognizer.stop();
@@ -219,7 +212,7 @@ public class SphinxRecognizer implements RecognitionListener {
 
         Log.d(TAG,"full-partialResult: "+text);
 
-        if(recognizer.getSearchName().equals(SphinxRecognizer.BINANSWER_SEARCH) || recognizer.getSearchName().equals(SphinxRecognizer.SHAPE_SEARCH)) {
+        if(recognizer.getSearchName().equals(SphinxRecognizer.MAGICWORD_SEARCH)) {
             text = text.trim();
             String textTokens[] = text.split(" ");
             if(textTokens[0].matches("semi|half"))

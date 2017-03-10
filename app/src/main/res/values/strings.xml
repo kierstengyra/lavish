@@ -12,4 +12,6 @@
     <string name="pwd_friendly">PWD-friendly toilets</string>
     <string name="cubicle_count">Cubicle Count</string>
 
+    <string name="emergency_keyword">help</string>
+
 </resources>
