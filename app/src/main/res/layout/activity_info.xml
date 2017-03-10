@@ -86,11 +86,10 @@
         android:text="Free"
         android:id="@+id/checkFree"
         android:checked="false"
-        android:layout_above="@+id/checkPWD"
-        android:layout_toEndOf="@+id/txtHours"
-        android:layout_marginStart="54dp"
         android:clickable="false"
-        android:buttonTint="#83b09a" />
+        android:buttonTint="#83b09a"
+        android:layout_above="@+id/checkPWD"
+        android:layout_centerHorizontal="true" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -180,7 +179,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:id="@+id/imageView1_6"
-            android:src="@drawable/ic_star_border_black_24dp"
+            android:src="@drawable/ic_star_border_black"
             android:layout_below="@+id/txtUser1_1"
             android:layout_toEndOf="@+id/imageView1_5" />
 
@@ -285,7 +284,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Krissy Anino"
+            android:text="Juan dela Cruz"
             android:id="@+id/txtUser3_1"
             android:layout_marginStart="17dp"
             android:textColor="#000000"
@@ -344,6 +343,17 @@
             android:layout_marginRight="43dp" />
 
     </RelativeLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addFeedback"
+        android:src="@drawable/add_item"
+        android:background="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/section_separator"
+        android:layout_marginBottom="29dp"
+        android:onClick="addFeedback"/>
 
 
 </RelativeLayout>
