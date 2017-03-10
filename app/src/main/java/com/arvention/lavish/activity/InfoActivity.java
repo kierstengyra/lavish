@@ -1,13 +1,12 @@
-package com.arvention.lavish.activity;
+package com.lavishinterface;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.arvention.lavish.R;
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -16,6 +15,7 @@ public class InfoActivity extends AppCompatActivity {
     TextView txtHours;
 
     Intent intent;
+    Intent nextIntent;
     String toilet;
 
     CheckBox checkBidet;
@@ -23,6 +23,9 @@ public class InfoActivity extends AppCompatActivity {
     CheckBox checkSoap;
     CheckBox checkFree;
     CheckBox checkPWD;
+
+    RelativeLayout rl;
+    TextView txtFeedback3_1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,10 @@ public class InfoActivity extends AppCompatActivity {
         toilet = intent.getStringExtra("TOILET");
         txtTitle = (TextView) findViewById(R.id.txtTitle);
         txtTitle.setText(toilet);
+
+        rl = (RelativeLayout) findViewById(R.id.relativeLayout3);
+        rl.setVisibility(View.GONE);
+        txtFeedback3_1 = (TextView) findViewById(R.id.txtFeedback3_1);
 
         txtRating = (TextView) findViewById(R.id.txtRating);
         txtHours = (TextView) findViewById(R.id.txtHours);
@@ -83,6 +90,31 @@ public class InfoActivity extends AppCompatActivity {
         }
         if(toilet.equals("7-11/Caltex"))
             checkSoap.setChecked(false);
+    }
+
+    public void addFeedback(View view) {
+        nextIntent = new Intent(this, AddFeedbackActivity.class);
+        nextIntent.putExtra("TOILET", toilet);
+
+        startActivityForResult(nextIntent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1) {
+            if(data != null) {
+                //TODO: Display Rating
+                String userFeedback = data.getStringExtra("FEEDBACK");
+                displayData(userFeedback); //Add Rating to parameter
+            }
+        }
+    }
+
+    private void displayData(String userFeedback) {
+        txtFeedback3_1.setText(userFeedback);
+        rl.setVisibility(View.VISIBLE);
     }
 
     public void backToList(View view) {

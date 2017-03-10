@@ -16,6 +16,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/rate_back"
             android:src="@drawable/ic_arrow_back_white_24dp"
             android:background="@color/colorPrimary"
             android:layout_gravity="center"
@@ -32,13 +33,27 @@
             android:textColor="@color/colorWhite"
             />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rate_save"
+                android:src="@drawable/ic_check_white_24dp"
+                android:background="@color/colorPrimary"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                />
+        </RelativeLayout>
+
     </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:id="@+id/rate_toilet_icon"
-        android:paddingTop="100dp"
+        android:paddingTop="20dp"
         android:layout_below="@id/rate_header"
         android:src="@mipmap/toilet"
         />
@@ -46,6 +61,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/rate_name"
         android:layout_below="@id/rate_toilet_icon"
         android:gravity="center"
         android:textSize="20dp"
@@ -58,6 +74,18 @@
         android:layout_below="@+id/rate_toilet_icon"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:id="@+id/ratingBar" />
+        android:id="@+id/rate_ratingBar" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:layout_below="@+id/rate_ratingBar"
+        android:layout_margin="10dp"
+
+        android:id="@+id/rate_contents"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
