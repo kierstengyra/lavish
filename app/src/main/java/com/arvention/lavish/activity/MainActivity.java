@@ -65,6 +65,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Polyline directions;
     private LatLng mCurrentLatLng;
     private Marker tempMarker;
-    private boolean isAddModeEnabled=false;
+    private boolean isAddModeEnabled = false;
 
     private ViewFlipper panelflipper;
     private DrawerLayout drawerLayout;
@@ -88,11 +90,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button buttonRate;
 
     private SphinxRecognizer recognizer;
+    private ArrayList<Toilet> toiletArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toiletArrayList = new ArrayList<>();
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
@@ -167,12 +172,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
         }
 
+        /*
         LatLng coord1 = new LatLng(14.262753, 121.054529);
         LatLng coord2 = new LatLng(14.267413, 121.052429);
         LatLng coord3 = new LatLng(14.253030, 121.055917);
         addMapMarker(coord1,null);
         addMapMarker(coord2,null);
         addMapMarker(coord3,null);
+        */
     }
 
 
@@ -180,6 +187,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onMarkerClick(Marker marker) {
         drawDirections(marker);
         Toilet toilet = (Toilet) marker.getTag();
+        updateDetailPanel(toilet);
+
+        Log.d("MainActivity", "Marker Clicked");
+        return false;
+    }
+
+    public void updateDetailPanel (Toilet toilet){
 
         TextView nameView = (TextView) findViewById(R.id.toilet_name),
                 openHours = (TextView) findViewById(R.id.opening_hours_label);
@@ -192,34 +206,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         nameView.setText(toilet.getName());
         openHours.setText(toilet.getOpeningHours());
-        if(toilet.isHasBidet())
+        if (toilet.isHasBidet())
             bidet.setVisibility(View.VISIBLE);
         else
             bidet.setVisibility(View.INVISIBLE);
-        if(toilet.isHasFlush())
+        if (toilet.isHasFlush())
             flush.setVisibility(View.VISIBLE);
         else
             flush.setVisibility(View.INVISIBLE);
-        if(toilet.isHasSoap())
+        if (toilet.isHasSoap())
             soap.setVisibility(View.VISIBLE);
         else
             soap.setVisibility(View.INVISIBLE);
-        if(toilet.isFree())
+        if (toilet.isFree())
             free.setVisibility(View.VISIBLE);
         else
             free.setVisibility(View.INVISIBLE);
-        if(toilet.isPWDFriendly())
+        if (toilet.isPWDFriendly())
             pwd.setVisibility(View.VISIBLE);
         else
             pwd.setVisibility(View.INVISIBLE);
-
-        Log.d("MainActivity", "Marker Clicked");
-        return false;
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLatLng,15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 15));
     }
 
     @Override
@@ -247,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         double myLat = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLatitude();
         double myLong = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLongitude();
-        mCurrentLatLng = new LatLng(myLat,myLong);
+        mCurrentLatLng = new LatLng(myLat, myLong);
         /*  currently disabled due to standard license daily limits
         if(currMarker!=null)
             drawDirections(currMarker);
@@ -256,10 +267,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapClick(LatLng latLng) {
-        Log.d("MainActivity","onMapClick1");
-        if(isAddModeEnabled){
-            Log.d("MainActivity","onMapClick2");
-            if(tempMarker!= null)
+        Log.d("MainActivity", "onMapClick1");
+        if (isAddModeEnabled) {
+            Log.d("MainActivity", "onMapClick2");
+            if (tempMarker != null)
                 tempMarker.remove();
             tempMarker = mMap.addMarker(new MarkerOptions().position(latLng));
         }
@@ -267,8 +278,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void resultReceived(String result) {
-        if(result.equals(getString(R.string.emergency_keyword))){
-            //TODO: getNearestToilet then moveCamera then drawDirections
+        if (result.equals(getString(R.string.emergency_keyword))) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            double myLat = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLatitude();
+            double myLong = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLongitude();
+            LatLng myLatLng = new LatLng(myLat,myLong);
+            Toilet nearest = MapDetailUtil.getNearestToilet(myLatLng,toiletArrayList);
+            if(nearest!=null) {
+                updateDetailPanel(nearest);
+                LatLng nearestLoc = new LatLng(nearest.getyCoordinate(), nearest.getxCoordinate());
+                directions.remove();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(nearestLoc, 15));
+            }
             Log.d("MainActivity","KEYWORD RECOGNIZED");
             recognizer.stopRecognizer();
             recognizer.startSearch(SphinxRecognizer.MAGICWORD_SEARCH);
@@ -301,8 +331,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     tempMarker.remove();
                 }
             }
-                button.setImageResource(R.drawable.ic_add_white_24dp);
+
+            button.setImageResource(R.drawable.ic_add_white_24dp);
+            clearFields();
         }
+    }
+
+    public void clearFields(){
+        CheckBox bidet = ((CheckBox) findViewById(R.id.bidet_checkbox))
+                , flush = ((CheckBox) findViewById(R.id.flush_checkbox))
+                , soap = ((CheckBox) findViewById(R.id.soap_checkbox))
+                , free = ((CheckBox) findViewById(R.id.free_checkbox))
+                , pwd = ((CheckBox) findViewById(R.id.pwd_checkbox));
+        EditText openHours = ((EditText) findViewById(R.id.edit_opening_hours));
+        EditText name = ((EditText) findViewById(R.id.edit_toilet_name));
+
+        bidet.setChecked(false);
+        flush.setChecked(false);
+        soap.setChecked(false);
+        free.setChecked(false);
+        pwd.setChecked(false);
+        openHours.setText("");
+        name.setText("");
     }
 
     protected void onStart() {
@@ -325,14 +375,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker marker = mMap.addMarker(new MarkerOptions().position(coordinates));
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.toilet));
         marker.setTag(toilet);
-        //TODO: add more details for marker (add an identifier) use .tag
+        toiletArrayList.add(toilet);
     }
 
     private void addMapMarker(LatLng coordinates, Toilet toilet, String title) {
         Marker marker = mMap.addMarker(new MarkerOptions().position(coordinates).title(title));
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.toilet));
         marker.setTag(toilet);
-        //TODO: add more details for marker (add an identifier)
+        toiletArrayList.add(toilet);
     }
 
     private void clearMapMarkers() {
@@ -374,8 +424,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
+                .setName("Main Page")
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();
         return new Action.Builder(Action.TYPE_VIEW)
@@ -450,7 +499,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 TextView distanceView = (TextView) findViewById(R.id.toilet_distance);
                 if(distance>1000) {
                     distance = distance / 1000;
-                    distanceView.setText(distance + " km away");
+                    DecimalFormat df = new DecimalFormat(".##");
+                    distanceView.setText(df.format(distance) + " km away");
                 }else
                     distanceView.setText(distance + " m away");
 
