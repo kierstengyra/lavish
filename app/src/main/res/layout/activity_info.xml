@@ -12,18 +12,20 @@
         android:background="#7AAA92"
         android:padding="16dp"
         android:textColor="#FFFFFF"
-        android:gravity="center_vertical|center" />
+        android:gravity="center_vertical|center"
+        android:layout_alignParentLeft="true" />
 
     <ImageButton
         android:layout_width="46dp"
         android:layout_height="23dp"
         android:id="@+id/imageButton"
         android:src="@drawable/ic_arrow_back_white_24dp"
-        android:background="#@color/colorPrimary"
+        android:background="@color/colorPrimary"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:onClick="backToList" />
+        android:onClick="backToList"
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,7 +36,8 @@
         android:layout_marginTop="17dp"
         android:textColor="#1faf67"
         android:layout_below="@+id/txtTitle"
-        android:layout_alignStart="@+id/imageButton" />
+        android:layout_alignStart="@+id/imageButton"
+        android:layout_alignLeft="@+id/imageButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,7 +47,8 @@
         android:id="@+id/txtHours"
         android:textColor="#1faf67"
         android:layout_below="@+id/txtRating"
-        android:layout_alignStart="@+id/txtRating" />
+        android:layout_alignStart="@+id/txtRating"
+        android:layout_alignLeft="@+id/txtRating" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -56,7 +60,8 @@
         android:clickable="false"
         android:buttonTint="#83b09a"
         android:layout_below="@+id/txtHours"
-        android:layout_alignStart="@+id/txtHours" />
+        android:layout_alignStart="@+id/txtHours"
+        android:layout_alignLeft="@+id/txtHours" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -67,7 +72,8 @@
         android:layout_below="@+id/checkBidet"
         android:layout_alignStart="@+id/checkBidet"
         android:clickable="false"
-        android:buttonTint="#83b09a" />
+        android:buttonTint="#83b09a"
+        android:layout_alignLeft="@+id/checkBidet" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -78,7 +84,8 @@
         android:layout_below="@+id/checkFlush"
         android:layout_alignStart="@+id/checkFlush"
         android:clickable="false"
-        android:buttonTint="#83b09a" />
+        android:buttonTint="#83b09a"
+        android:layout_alignLeft="@+id/checkFlush" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -90,7 +97,9 @@
         android:layout_toEndOf="@+id/txtHours"
         android:layout_marginStart="54dp"
         android:clickable="false"
-        android:buttonTint="#83b09a" />
+        android:buttonTint="#83b09a"
+        android:layout_toRightOf="@+id/txtHours"
+        android:layout_marginLeft="54dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -102,7 +111,8 @@
         android:layout_alignStart="@+id/checkFree"
         android:clickable="false"
         android:buttonTint="#83b09a"
-        android:contextClickable="false" />
+        android:contextClickable="false"
+        android:layout_alignLeft="@+id/checkFree" />
 
     <View
         android:id="@+id/section_separator"
@@ -113,7 +123,8 @@
         android:layout_alignStart="@id/checkBidet"
         android:layout_marginRight="22dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:layout_alignLeft="@id/checkBidet" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -122,7 +133,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:layout_below="@id/section_separator"
-        android:id="@+id/relativeLayout1">
+        android:id="@+id/relativeLayout1"
+        android:layout_alignParentLeft="true">
 
         <ImageView
             android:layout_width="36dp"
@@ -131,7 +143,9 @@
             android:src="@drawable/profile_img"
             android:layout_marginStart="21dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="21dp"
+            android:layout_alignParentLeft="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -142,7 +156,9 @@
             android:layout_marginStart="17dp"
             android:textColor="#000000"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/imageView1_1" />
+            android:layout_toEndOf="@+id/imageView1_1"
+            android:layout_marginLeft="17dp"
+            android:layout_toRightOf="@+id/imageView1_1" />
 
         <ImageView
             android:layout_width="16dp"
@@ -150,7 +166,8 @@
             android:id="@+id/imageView1_2"
             android:layout_below="@+id/txtUser1_1"
             android:layout_alignStart="@+id/txtUser1_1"
-            android:src="@drawable/ic_star_yellow_24dp" />
+            android:src="@drawable/ic_star_yellow_24dp"
+            android:layout_alignLeft="@+id/txtUser1_1" />
 
         <ImageView
             android:layout_width="16dp"
@@ -158,7 +175,8 @@
             android:id="@+id/imageView1_3"
             android:src="@drawable/ic_star_yellow_24dp"
             android:layout_below="@+id/txtUser1_1"
-            android:layout_toEndOf="@+id/imageView1_2" />
+            android:layout_toEndOf="@+id/imageView1_2"
+            android:layout_toRightOf="@+id/imageView1_2" />
 
         <ImageView
             android:layout_width="16dp"
@@ -166,7 +184,8 @@
             android:id="@+id/imageView1_4"
             android:src="@drawable/ic_star_yellow_24dp"
             android:layout_below="@+id/txtUser1_1"
-            android:layout_toEndOf="@+id/imageView1_3" />
+            android:layout_toEndOf="@+id/imageView1_3"
+            android:layout_toRightOf="@+id/imageView1_3" />
 
         <ImageView
             android:layout_width="16dp"
@@ -174,15 +193,17 @@
             android:id="@+id/imageView1_5"
             android:src="@drawable/ic_star_half_yellow_24dp"
             android:layout_below="@+id/txtUser1_1"
-            android:layout_toEndOf="@+id/imageView1_4" />
+            android:layout_toEndOf="@+id/imageView1_4"
+            android:layout_toRightOf="@+id/imageView1_4" />
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:id="@+id/imageView1_6"
-            android:src="@drawable/ic_star_border_black"
+            android:src="@drawable/ic_star_border_black_24dp"
             android:layout_below="@+id/txtUser1_1"
-            android:layout_toEndOf="@+id/imageView1_5" />
+            android:layout_toEndOf="@+id/imageView1_5"
+            android:layout_toRightOf="@+id/imageView1_5" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -193,7 +214,8 @@
             android:layout_below="@+id/imageView1_1"
             android:layout_alignStart="@+id/txtUser1_1"
             android:text="This toilet is almost perfect! All it needs to have is enough supply of soap."
-            android:layout_marginRight="43dp" />
+            android:layout_marginRight="43dp"
+            android:layout_alignLeft="@+id/txtUser1_1" />
 
     </RelativeLayout>
 
@@ -204,7 +226,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="18dp"
         android:id="@+id/relativeLayout2"
-        android:layout_below="@id/relativeLayout1">
+        android:layout_below="@id/relativeLayout1"
+        android:layout_alignParentLeft="true">
 
         <ImageView
             android:layout_width="36dp"
@@ -213,7 +236,9 @@
             android:src="@drawable/profile_img"
             android:layout_marginStart="21dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="21dp"
+            android:layout_alignParentLeft="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -224,7 +249,9 @@
             android:layout_marginStart="17dp"
             android:textColor="#000000"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/imageView2_1" />
+            android:layout_toEndOf="@+id/imageView2_1"
+            android:layout_marginLeft="17dp"
+            android:layout_toRightOf="@+id/imageView2_1" />
 
         <ImageView
             android:layout_width="16dp"
@@ -232,7 +259,8 @@
             android:id="@+id/imageView2_2"
             android:layout_below="@+id/txtUser2_1"
             android:layout_alignStart="@+id/txtUser2_1"
-            android:src="@drawable/ic_star_yellow_24dp" />
+            android:src="@drawable/ic_star_yellow_24dp"
+            android:layout_alignLeft="@+id/txtUser2_1" />
 
         <ImageView
             android:layout_width="16dp"
@@ -240,7 +268,8 @@
             android:id="@+id/imageView2_3"
             android:src="@drawable/ic_star_yellow_24dp"
             android:layout_below="@+id/txtUser2_1"
-            android:layout_toEndOf="@+id/imageView2_2" />
+            android:layout_toEndOf="@+id/imageView2_2"
+            android:layout_toRightOf="@+id/imageView2_2" />
 
         <ImageView
             android:layout_width="16dp"
@@ -248,7 +277,8 @@
             android:id="@+id/imageView2_4"
             android:src="@drawable/ic_star_half_yellow_24dp"
             android:layout_below="@+id/txtUser2_1"
-            android:layout_toEndOf="@+id/imageView2_3" />
+            android:layout_toEndOf="@+id/imageView2_3"
+            android:layout_toRightOf="@+id/imageView2_3" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -259,7 +289,8 @@
             android:layout_below="@+id/imageView2_1"
             android:layout_alignStart="@+id/txtUser2_1"
             android:text="The flush didn't work :("
-            android:layout_marginRight="43dp" />
+            android:layout_marginRight="43dp"
+            android:layout_alignLeft="@+id/txtUser2_1" />
 
     </RelativeLayout>
 
@@ -270,7 +301,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="18dp"
         android:id="@+id/relativeLayout3"
-        android:layout_below="@id/relativeLayout2">
+        android:layout_below="@id/relativeLayout2"
+        android:layout_alignParentLeft="true">
 
         <ImageView
             android:layout_width="36dp"
@@ -279,7 +311,9 @@
             android:src="@drawable/profile_img"
             android:layout_marginStart="21dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="21dp"
+            android:layout_alignParentLeft="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -290,7 +324,9 @@
             android:layout_marginStart="17dp"
             android:textColor="#000000"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/imageView3_1" />
+            android:layout_toEndOf="@+id/imageView3_1"
+            android:layout_marginLeft="17dp"
+            android:layout_toRightOf="@+id/imageView3_1" />
 
         <ImageView
             android:layout_width="16dp"
@@ -298,7 +334,8 @@
             android:id="@+id/imageView3_2"
             android:layout_below="@+id/txtUser3_1"
             android:layout_alignStart="@+id/txtUser3_1"
-            android:src="@drawable/ic_star_yellow_24dp" />
+            android:src="@drawable/ic_star_yellow_24dp"
+            android:layout_alignLeft="@+id/txtUser3_1" />
 
         <ImageView
             android:layout_width="16dp"
@@ -306,7 +343,8 @@
             android:id="@+id/imageView3_3"
             android:src="@drawable/ic_star_yellow_24dp"
             android:layout_below="@+id/txtUser3_1"
-            android:layout_toEndOf="@+id/imageView3_2" />
+            android:layout_toEndOf="@+id/imageView3_2"
+            android:layout_toRightOf="@+id/imageView3_2" />
 
         <ImageView
             android:layout_width="16dp"
@@ -314,7 +352,8 @@
             android:id="@+id/imageView3_4"
             android:src="@drawable/ic_star_yellow_24dp"
             android:layout_below="@+id/txtUser3_1"
-            android:layout_toEndOf="@+id/imageView3_3" />
+            android:layout_toEndOf="@+id/imageView3_3"
+            android:layout_toRightOf="@+id/imageView3_3" />
 
         <ImageView
             android:layout_width="16dp"
@@ -322,7 +361,8 @@
             android:id="@+id/imageView3_5"
             android:src="@drawable/ic_star_yellow_24dp"
             android:layout_below="@+id/txtUser3_1"
-            android:layout_toEndOf="@+id/imageView3_4" />
+            android:layout_toEndOf="@+id/imageView3_4"
+            android:layout_toRightOf="@+id/imageView3_4" />
 
         <ImageView
             android:layout_width="16dp"
@@ -330,10 +370,12 @@
             android:id="@+id/imageView3_6"
             android:src="@drawable/ic_star_half_yellow_24dp"
             android:layout_below="@+id/txtUser3_1"
-            android:layout_toEndOf="@+id/imageView3_5" />
+            android:layout_toEndOf="@+id/imageView3_5"
+            android:layout_toRightOf="@+id/imageView3_5" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width
+                ="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/txtFeedback3_1"
@@ -341,7 +383,8 @@
             android:layout_below="@+id/imageView3_1"
             android:layout_alignStart="@+id/txtUser3_1"
             android:text="In fairness this CR ha ~"
-            android:layout_marginRight="43dp" />
+            android:layout_marginRight="43dp"
+            android:layout_alignLeft="@+id/txtUser3_1" />
 
     </RelativeLayout>
 

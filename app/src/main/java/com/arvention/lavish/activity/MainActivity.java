@@ -522,5 +522,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         recognizer.clearInterpreters();
         recognizer.stopRecognizer();
         recognizer.closeRecognizer();
+        super.onDestroy();
     }
 }
