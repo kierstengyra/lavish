@@ -4,6 +4,10 @@ import com.arvention.lavish.model.Toilet;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.ListIterator;
 
@@ -25,6 +29,25 @@ public abstract class MapDetailUtil {
         }
 
         return totalDistance;
+    }
+
+    /**
+     * computes for travel time of the route
+     * @param route the JSONObject of the route obtained from google api
+     * @return returns the total travel time of the route in seconds
+     */
+    public static int computeTravelTime(JSONObject route){
+        int totalTravelTime = 0;
+        try {
+            JSONArray legs = (JSONArray) route.get("legs");
+            for(int i=0; i<legs.length(); i++){
+                JSONObject duration = (JSONObject) ((JSONObject)legs.get(i)).get("duration");
+                totalTravelTime += duration.getInt("value");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return totalTravelTime;
     }
 
     public static Toilet getNearestToilet(LatLng deviceLocation, List<Toilet> toilets){
