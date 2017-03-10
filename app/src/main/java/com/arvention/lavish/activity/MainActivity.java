@@ -17,11 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.arvention.lavish.R;
-import com.arvention.lavish.model.Toilet;
-import com.arvention.lavish.sphinxrecognizer.SphinxInterpreter;
-import com.arvention.lavish.sphinxrecognizer.SphinxRecognizer;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -30,8 +29,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -55,8 +52,7 @@ import java.net.URL;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, GoogleMap.OnMapClickListener, SphinxInterpreter {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private final String[] features = {"With Bidet", "With Flush", "With Soap", "Free", "PWD Friendly", "Cubicle Count"};
     private final String[] menu = {"Toilets with bidet", "Toilets with flush", "Toilets with soap", "Free toilets", "PWD-friendly toilets", "Cubicle Count"};
@@ -67,12 +63,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Polyline directions;
     private LatLng mCurrentLatLng;
     private Marker currMarker;
-    private boolean isAddModeEnabled=false;
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-
-    private SphinxRecognizer recognizer;
+    private Button buttonRate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +109,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        recognizer = SphinxRecognizer.getInstance(this);
-        recognizer.addInterpreter(this);
+        buttonRate = (Button) findViewById(R.id.main_rate_button);
+        buttonRate.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), RateActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
     }
 
     /**
@@ -140,16 +143,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng coord1 = new LatLng(14.262753, 121.054529);
         LatLng coord2 = new LatLng(14.267413, 121.052429);
         LatLng coord3 = new LatLng(14.253030, 121.055917);
-        addMapMarker(coord1,null);
-        addMapMarker(coord2,null);
-        addMapMarker(coord3,null);
+        addMapMarker(coord1);
+        addMapMarker(coord2);
+        addMapMarker(coord3);
     }
 
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         drawDirections(marker);
-        Toilet toilet = (Toilet) marker.getTag();
         currMarker = marker;
         Log.d("MainActivity", "Marker Clicked");
         return false;
@@ -192,27 +194,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         */
     }
 
-    @Override
-    public void onMapClick(LatLng latLng) {
-        if(isAddModeEnabled){
-           //TODO: create toilet object from fields then addMapMarker()
-        }
-    }
-
-    @Override
-    public void resultReceived(String result) {
-        if(result.equals(getString(R.string.emergency_keyword))){
-            //TODO: getNearestToilet then moveCamera then drawDirections
-            Log.d("MainActivity","KEYWORD RECOGNIZED");
-        }
-
-    }
-
-    @Override
-    public void onRecognizerReady() {
-        recognizer.startSearch(SphinxRecognizer.MAGICWORD_SEARCH);
-    }
-
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -220,21 +201,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected void onStop() {
         mGoogleApiClient.disconnect();
-
         super.onStop();
     }
 
-    private void addMapMarker(LatLng coordinates, Toilet toilet) {
+    private void addMapMarker(LatLng coordinates) {
         Marker marker = mMap.addMarker(new MarkerOptions().position(coordinates));
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.toilet));
-        marker.setTag(toilet);
+        //marker.setTag();
         //TODO: add more details for marker (add an identifier) use .tag
     }
 
-    private void addMapMarker(LatLng coordinates, Toilet toilet, String title) {
+    private void addMapMarker(LatLng coordinates, String title) {
         Marker marker = mMap.addMarker(new MarkerOptions().position(coordinates).title(title));
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.toilet));
-        marker.setTag(toilet);
+        //marker.setTag();
         //TODO: add more details for marker (add an identifier)
     }
 
@@ -270,7 +248,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(directions!=null)
             directions.remove();
     }
-
 
     private class JSONParser extends AsyncTask<String, String, Void> {
         InputStream inputStream = null;
@@ -327,15 +304,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //total distance of the route
                 double distance = MapDetailUtil.computeRouteDistance(latLngs);
 
-                //total travel time for the route
-                int travelTime = MapDetailUtil.computeTravelTime(route);
-                double minTravelTime = travelTime/60.0;
 
                 directions = mMap.addPolyline(new PolylineOptions().addAll(latLngs));
                 directions.setColor(ContextCompat.getColor(MainActivity.this,R.color.colorPolyline));
 
-                Log.d("JSONParser", "Route travel time: " + minTravelTime+" minutes");
-                Log.d("JSONParser", "Route travel time: " + travelTime+" seconds");
                 Log.d("JSONParser", "Route distance: " + distance+" meters");
                 Log.d("JSONParser", "Result: " + parsedObject.toString());
                 Log.d("JSONParser", "pointsHash: " + pointsHash);
@@ -347,10 +319,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    @Override
-    protected void onDestroy(){
-        recognizer.clearInterpreters();
-        recognizer.stopRecognizer();
-        recognizer.closeRecognizer();
-    }
 }
