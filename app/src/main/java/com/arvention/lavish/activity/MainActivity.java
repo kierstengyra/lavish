@@ -6,9 +6,11 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -19,11 +21,20 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.arvention.lavish.R;
 import com.arvention.lavish.model.Toilet;
 import com.arvention.lavish.sphinxrecognizer.SphinxInterpreter;
 import com.arvention.lavish.sphinxrecognizer.SphinxRecognizer;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -68,9 +79,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Polyline directions;
     private LatLng mCurrentLatLng;
-    private Marker currMarker;
+    private Marker tempMarker;
     private boolean isAddModeEnabled=false;
 
+    private ViewFlipper panelflipper;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Button buttonRate;
@@ -84,9 +96,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
+            // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
+            // See https://g.co/AppIndexing/AndroidStudio for more information.
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(LocationServices.API)
-                    .build();
+                    .addApi(AppIndex.API).build();
         }
 
 
@@ -97,15 +111,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 int index = 0;
-                for(int i = 0; i < menu.length; i++) {
+                for (int i = 0; i < menu.length; i++) {
 
-                    if(menu[i].equals(item.getTitle()))
+                    if (menu[i].equals(item.getTitle()))
                         index = i;
 
                 }
@@ -130,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+
+        panelflipper = (ViewFlipper) findViewById(R.id.panel_container);
     }
 
     /**
@@ -145,8 +161,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         }
 
@@ -163,7 +180,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onMarkerClick(Marker marker) {
         drawDirections(marker);
         Toilet toilet = (Toilet) marker.getTag();
-        currMarker = marker;
+
+        TextView nameView = (TextView) findViewById(R.id.toilet_name),
+                openHours = (TextView) findViewById(R.id.opening_hours_label);
+
+        ImageView bidet = (ImageView) findViewById(R.id.toilet_bidet_check),
+                flush = (ImageView) findViewById(R.id.toilet_flush_check),
+                soap = (ImageView) findViewById(R.id.toilet_soap_check),
+                free = (ImageView) findViewById(R.id.toilet_free_check),
+                pwd = (ImageView) findViewById(R.id.toilet_pwd_check);
+
+        nameView.setText(toilet.getName());
+        openHours.setText(toilet.getOpeningHours());
+        if(toilet.isHasBidet())
+            bidet.setVisibility(View.VISIBLE);
+        else
+            bidet.setVisibility(View.INVISIBLE);
+        if(toilet.isHasFlush())
+            flush.setVisibility(View.VISIBLE);
+        else
+            flush.setVisibility(View.INVISIBLE);
+        if(toilet.isHasSoap())
+            soap.setVisibility(View.VISIBLE);
+        else
+            soap.setVisibility(View.INVISIBLE);
+        if(toilet.isFree())
+            free.setVisibility(View.VISIBLE);
+        else
+            free.setVisibility(View.INVISIBLE);
+        if(toilet.isPWDFriendly())
+            pwd.setVisibility(View.VISIBLE);
+        else
+            pwd.setVisibility(View.INVISIBLE);
+
         Log.d("MainActivity", "Marker Clicked");
         return false;
     }
@@ -207,8 +256,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapClick(LatLng latLng) {
+        Log.d("MainActivity","onMapClick1");
         if(isAddModeEnabled){
-           //TODO: create toilet object from fields then addMapMarker()
+            Log.d("MainActivity","onMapClick2");
+            if(tempMarker!= null)
+                tempMarker.remove();
+            tempMarker = mMap.addMarker(new MarkerOptions().position(latLng));
         }
     }
 
@@ -218,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //TODO: getNearestToilet then moveCamera then drawDirections
             Log.d("MainActivity","KEYWORD RECOGNIZED");
             recognizer.stopRecognizer();
+            recognizer.startSearch(SphinxRecognizer.MAGICWORD_SEARCH);
         }
 
     }
@@ -227,15 +281,44 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         recognizer.startSearch(SphinxRecognizer.MAGICWORD_SEARCH);
     }
 
+    public void toggleAddButton(View v){
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.home_add_note_fab);
+        Log.d("MainActivity","AddButton pressed");
+        isAddModeEnabled=!isAddModeEnabled;
+        panelflipper.showNext();
+        if(isAddModeEnabled){
+            button.setImageResource(R.drawable.save);
+        }else{
+            if(tempMarker!=null) {
+                boolean hasBidet = ((CheckBox) findViewById(R.id.bidet_checkbox)).isChecked(), hasFlush = ((CheckBox) findViewById(R.id.flush_checkbox)).isChecked(), hasSoap = ((CheckBox) findViewById(R.id.soap_checkbox)).isChecked(), isFree = ((CheckBox) findViewById(R.id.free_checkbox)).isChecked(), isPWDfriendly = ((CheckBox) findViewById(R.id.pwd_checkbox)).isChecked();
+                String openHours = ((EditText) findViewById(R.id.edit_opening_hours)).getText().toString();
+                String name = ((EditText) findViewById(R.id.edit_toilet_name)).getText().toString();
+                LatLng coords = tempMarker.getPosition();
+                if(!(name.equals("")&&openHours.equals(""))) {
+                    Toilet toilet = new Toilet(name, coords.longitude, coords.latitude,
+                            hasBidet, hasFlush, hasSoap, isFree, isPWDfriendly, openHours);
+                    addMapMarker(coords, toilet, name);
+                    tempMarker.remove();
+                }
+            }
+                button.setImageResource(R.drawable.ic_add_white_24dp);
+        }
+    }
+
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
     }
 
     protected void onStop() {
         mGoogleApiClient.disconnect();
 
-        super.onStop();
+        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
     }
 
     private void addMapMarker(LatLng coordinates, Toilet toilet) {
@@ -283,6 +366,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void clearDirections(){
         if(directions!=null)
             directions.remove();
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
     }
 
 
@@ -347,6 +446,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 directions = mMap.addPolyline(new PolylineOptions().addAll(latLngs));
                 directions.setColor(ContextCompat.getColor(MainActivity.this,R.color.colorPolyline));
+
+                TextView distanceView = (TextView) findViewById(R.id.toilet_distance);
+                if(distance>1000) {
+                    distance = distance / 1000;
+                    distanceView.setText(distance + " km away");
+                }else
+                    distanceView.setText(distance + " m away");
 
                 Log.d("JSONParser", "Route travel time: " + minTravelTime+" minutes");
                 Log.d("JSONParser", "Route travel time: " + travelTime+" seconds");

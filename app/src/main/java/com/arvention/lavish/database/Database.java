@@ -87,7 +87,7 @@ public class Database extends SQLiteOpenHelper {
         val.put("hasSoap", toilet.isHasSoap());
         val.put("isFree", toilet.isFree());
         val.put("isPWDFriendly", toilet.isPWDFriendly());
-        val.put("cubicleCount", toilet.getCubicleCount());
+        //val.put("cubicleCount", toilet.getCubicleCount());
         val.put("openingHours", toilet.getOpeningHours());
 
         db.insert(toilet_table, null, val);
@@ -154,8 +154,8 @@ public class Database extends SQLiteOpenHelper {
 
                 int cubicleCount = cursor.getInt(cursor.getColumnIndex("cubicleCount"));
                 String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
-                toilets.add(new Toilet(toiletID, name, xCoordinate, yCoordinate, hasBidet,
-                        hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount, openingHours));
+                toilets.add(new Toilet(name, xCoordinate, yCoordinate, hasBidet,
+                        hasFlush, hasSoap, isFree, isPWDFriendly, openingHours));
 
                 cursor.moveToNext();
 
@@ -244,8 +244,8 @@ public class Database extends SQLiteOpenHelper {
             int cubicleCount = cursor.getInt(cursor.getColumnIndex("cubicleCount"));
             String openingHours = cursor.getString(cursor.getColumnIndex("openingHours"));
 
-            toilet = new Toilet(toiletID, name, xCoordinate, yCoordinate, hasBidet,
-                    hasFlush, hasSoap, isFree, isPWDFriendly, cubicleCount, openingHours);
+            toilet = new Toilet(name, xCoordinate, yCoordinate, hasBidet,
+                    hasFlush, hasSoap, isFree, isPWDFriendly, openingHours);
 
         }
 
